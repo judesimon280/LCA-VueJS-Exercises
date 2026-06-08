@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooking Masterclass Catalogue</title>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:#f8f5f0;
+    color:#333;
+}
+
+header{
+    background:#8B4513;
+    color:white;
+    padding:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    position:sticky;
+    top:0;
+}
+
+.logo{
+    font-size:1.8rem;
+    font-weight:bold;
+}
+
+.wishlist{
+    background:white;
+    color:#8B4513;
+    padding:10px 15px;
+    border-radius:20px;
+    font-weight:bold;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+    padding:30px;
+}
+
+.page-title{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.course-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:20px;
+}
+
+.course-card{
+    background:white;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+    transition:0.3s;
+}
+
+.course-card:hover{
+    transform:translateY(-5px);
+}
+
+.course-image{
+    height:180px;
+    background:#d9b38c;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:60px;
+}
+
+.course-content{
+    padding:20px;
+}
+
+.course-title{
+    font-size:1.3rem;
+    margin-bottom:10px;
+    color:#8B4513;
+}
+
+.info{
+    margin-bottom:8px;
+}
+
+.price{
+    font-size:1.2rem;
+    font-weight:bold;
+    color:#2e8b57;
+    margin:10px 0;
+}
+
+.level{
+    display:inline-block;
+    padding:5px 10px;
+    border-radius:20px;
+    background:#f4e1d2;
+    margin-bottom:12px;
+}
+
+.available{
+    color:green;
+    font-weight:bold;
+}
+
+.sold-out{
+    color:red;
+    font-weight:bold;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#8B4513;
+    color:white;
+    cursor:pointer;
+    font-size:1rem;
+}
+
+button:hover{
+    background:#6f340c;
+}
+
+button:disabled{
+    background:#999;
+    cursor:not-allowed;
+}
+
+footer{
+    text-align:center;
+    padding:20px;
+    margin-top:40px;
+    background:#8B4513;
+    color:white;
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+
+<header>
+    <div class="logo">🍳 Cooking Masterclass</div>
+    <div class="wishlist">
+        Wishlist: {{ wishlistCount }}
+    </div>
+</header>
+
+<div class="container">
+    <h1 class="page-title">Course Catalogue</h1>
+
+    <div class="course-grid">
+
+        <div class="course-card" v-for="course in courses" :key="course.id">
+
+            <div class="course-image">
+                👨‍🍳
+            </div>
+
+            <div class="course-content">
+
+                <h2 class="course-title">{{ course.title }}</h2>
+
+                <p class="info"><strong>Chef:</strong> {{ course.chef }}</p>
+
+                <p class="info">
+                    <span class="level">{{ course.level }}</span>
+                </p>
+
+                <p class="price">R{{ course.price }}</p>
+
+                <p
+                    :class="course.available ? 'available' : 'sold-out'"
+                >
+                    {{ course.available ? 'Available' : 'Sold Out' }}
+                </p>
+
+                <br>
+
+                <button
+                    @click="saveCourse(course)"
+                    :disabled="!course.available || course.saved"
+                >
+                    {{
+                        !course.available
+                        ? 'Sold Out'
+                        : course.saved
+                        ? 'Saved ✓'
+                        : 'Save to Wishlist'
+                    }}
+                </button>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<footer>
+    © 2026 Cooking Masterclass Catalogue
+</footer>
+
+</div>
+
+<script>
+const { createApp } = Vue;
+
+createApp({
+    data() {
+        return {
+            wishlistCount: 0,
+
+            courses: [
+                {
+                    id: 1,
+                    title: "Italian Pasta Mastery",
+                    chef: "Chef Marco Rossi",
+                    level: "Beginner",
+                    price: 499,
+                    available: true,
+                    saved: false
+                },
+                {
+                    id: 2,
+                    title: "French Pastry Essentials",
+                    chef: "Chef Claire Dubois",
+                    level: "Intermediate",
+                    price: 799,
+                    available: true,
+                    saved: false
+                },
+                {
+                    id: 3,
+                    title: "Advanced Sushi Techniques",
+                    chef: "Chef Kenji Tanaka",
+                    level: "Advanced",
+                    price: 999,
+                    available: false,
+                    saved: false
+                },
+                {
+                    id: 4,
+                    title: "Artisan Bread Baking",
+                    chef: "Chef Sarah Williams",
+                    level: "Beginner",
+                    price: 599,
+                    available: true,
+                    saved: false
+                },
+                {
+                    id: 5,
+                    title: "South African Braai Secrets",
+                    chef: "Chef Thabo Mokoena",
+                    level: "Intermediate",
+                    price: 699,
+                    available: true,
+                    saved: false
+                },
+                {
+                    id: 6,
+                    title: "Fine Dining Plating",
+                    chef: "Chef Isabella Moretti",
+                    level: "Advanced",
+                    price: 1199,
+                    available: false,
+                    saved: false
+                }
+            ]
+        };
+    },
+
+    methods: {
+        saveCourse(course) {
+            if (!course.saved && course.available) {
+                course.saved = true;
+                this.wishlistCount++;
+            }
+        }
+    }
+}).mount('#app');
+</script>
+
+</body>
+</html>
